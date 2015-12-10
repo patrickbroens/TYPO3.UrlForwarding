@@ -117,6 +117,44 @@ class RedirectRepository
     }
 
     /**
+     * Get records with the same "forward_url"
+     *
+     * @param int $uidEditedRecord The uid of the edited record
+     * @param array $editedRecord The fields of the edited record
+     * @return mixed
+     */
+    public function getEqualRecords($uidEditedRecord, $editedRecord)
+    {
+        $pathQuoted = $this->getDatabaseConnection()->fullQuoteStr((string)$editedRecord['forward_url'],
+            'tx_urlforwarding_domain_model_redirect');
+        $whereUid = '';
+
+        if (strpos($uidEditedRecord, 'NEW') === false) {
+            $whereUid = ' AND uid<>' . (int)$uidEditedRecord;
+        }
+
+        return $this->getDatabaseConnection()->exec_SELECTgetRows(
+            '
+                tx_urlforwarding_domain_model_redirect.uid,
+                GROUP_CONCAT(tx_urlforwarding_domain_mm.uid_foreign SEPARATOR \',\') AS domainUids
+            ',
+            '
+                tx_urlforwarding_domain_model_redirect
+                LEFT JOIN tx_urlforwarding_domain_mm
+                ON tx_urlforwarding_domain_mm.uid_local = tx_urlforwarding_domain_model_redirect.uid
+            ',
+            '
+                TRIM(BOTH \'/\' FROM tx_urlforwarding_domain_model_redirect.forward_url)=' . $pathQuoted . '
+                AND tx_urlforwarding_domain_model_redirect.deleted<>1
+                ' . $whereUid . '
+            ',
+            '
+                tx_urlforwarding_domain_model_redirect.uid
+            '
+        );
+    }
+
+    /**
      * Gets database instance
      *
      * @return \TYPO3\CMS\Core\Database\DatabaseConnection

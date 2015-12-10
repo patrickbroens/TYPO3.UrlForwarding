@@ -22,7 +22,6 @@ use PatrickBroens\UrlForwarding\Controller\ForwardController;
  */
 class IndexTs
 {
-
     /**
      * Preprocess the current request
      *
