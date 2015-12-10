@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+	<file source-language="en" datatype="plaintext" original="messages" date="2015-02-23T15:32:02Z" product-name="url_forwarding">
+		<header/>
+		<body>
+			<trans-unit id="table" xml:space="preserve">
+				<source>Redirect</source>
+			</trans-unit>
+			<trans-unit id="tab.request">
+				<source>Request</source>
+			</trans-unit>
+			<trans-unit id="tab.statistics">
+				<source>Statistics</source>
+			</trans-unit>
+			<trans-unit id="type" xml:space="preserve">
+				<source>Redirect to</source>
+			</trans-unit>
+			<trans-unit id="type.0">
+				<source>Internal page</source>
+			</trans-unit>
+			<trans-unit id="type.1">
+				<source>External URL</source>
+			</trans-unit>
+			<trans-unit id="type.2">
+				<source>Internal file</source>
+			</trans-unit>
+			<trans-unit id="http_status">
+				<source>HTTP status</source>
+			</trans-unit>
+			<trans-unit id="http_status.301">
+				<source>Moved Permanently (301)</source>
+			</trans-unit>
+			<trans-unit id="http_status.302">
+				<source>Moved temporarily (302)</source>
+			</trans-unit>
+			<trans-unit id="http_status.303">
+				<source>See other location (303)</source>
+			</trans-unit>
+			<trans-unit id="http_status.307">
+				<source>Temporary Redirect (307)</source>
+			</trans-unit>
+			<trans-unit id="forward_url">
+				<source>Source</source>
+			</trans-unit>
+			<trans-unit id="internal_page">
+				<source>Internal page</source>
+			</trans-unit>
+			<trans-unit id="external_url">
+				<source>External URL</source>
+			</trans-unit>
+			<trans-unit id="internal_file">
+				<source>Internal file</source>
+			</trans-unit>
+			<trans-unit id="domain">
+				<source>Limit to domain(s)</source>
+			</trans-unit>
+			<trans-unit id="requested_by">
+				<source>Requested by</source>
+			</trans-unit>
+			<trans-unit id="request_date">
+				<source>Date of request</source>
+			</trans-unit>
+			<trans-unit id="request_note">
+				<source>Notes</source>
+			</trans-unit>
+			<trans-unit id="counter">
+				<source>Counter</source>
+			</trans-unit>
+			<trans-unit id="last_hit">
+				<source>Last hit date</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>

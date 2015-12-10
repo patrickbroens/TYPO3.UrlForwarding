@@ -1,0 +1,35 @@
+{
+	"name": "patrickbroens/url-forwarding",
+	"type": "typo3-cms-extension",
+	"description": "Redirects (301, 302, 303, 307) to internal/external page or file, based on domain and path",
+	"keywords": [
+		"TYPO3",
+		"redirect",
+		"shortcut"
+	],
+	"authors": [
+		{
+			"name": "Patrick Broens",
+			"email": "patrick.broens@typo3.org",
+			"homepage": "https://github.com/patrickbroens"
+		}
+	],
+	"version": "1.1.0",
+	"require": {
+		"typo3/cms-core": "*"
+	},
+	"replace": {
+		"url-forwarding": "self.version",
+		"typo3-ter/url-forwarding": "self.version"
+	},
+	"autoload": {
+		"psr-4": {
+			"PatrickBroens\\UrlForwarding\\": "Classes/"
+		}
+	},
+	"homepage": "https://github.com/patrickbroens/TYPO3.UrlForwarding",
+	"license": "GPL-2.0+",
+	"support": {
+		"issues": "https://github.com/patrickbroens/TYPO3.UrlForwarding/issues"
+	}
+}
