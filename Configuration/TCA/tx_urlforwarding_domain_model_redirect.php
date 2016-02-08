@@ -1,8 +1,8 @@
 <?php
 defined('TYPO3_MODE') or die();
 
-return array(
-    'ctrl' => array(
+return [
+    'ctrl' => [
         'title'	=> 'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:table',
         'label' => 'forward_url',
         'tstamp' => 'tstamp',
@@ -10,28 +10,26 @@ return array(
         'cruser_id' => 'cruser_id',
         'type' => 'type',
         'typeicon_column' => 'type',
-        'typeicons' => array (
-            '0' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('url_forwarding') . 'Resources/Public/Icons/TCA/Redirect/Type_Internal.png',
-            '1' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('url_forwarding') . 'Resources/Public/Icons/TCA/Redirect/Type_External.png',
-            '2' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('url_forwarding') . 'Resources/Public/Icons/TCA/Redirect/Type_File.png'
-        ),
+        'typeicon_classes' => [
+            'default' => 'mimetypes-x-urlforwarding-redirect',
+            'mask' => 'mimetypes-x-urlforwarding-type-###TYPE###'
+        ],
         'useColumnsForDefaultValues' => 'type',
-        'dividers2tabs' => TRUE,
+        'dividers2tabs' => true,
         'default_sortby' => 'ORDER BY forward_url',
         'versioningWS' => 2,
-        'versioning_followPages' => TRUE,
+        'versioning_followPages' => true,
         'origUid' => 't3_origuid',
         'languageField' => 'sys_language_uid',
         'delete' => 'deleted',
-        'enablecolumns' => array(
+        'enablecolumns' => [
             'disabled' => 'hidden',
             'starttime' => 'starttime',
             'endtime' => 'endtime'
-        ),
-        'searchFields' => 'forward_url, internal_page, http_status',
-        'iconfile' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::extRelPath('url_forwarding') . 'Resources/Public/Icons/TCA/Redirect/Redirect.png'
-    ),
-    'interface' => array(
+        ],
+        'searchFields' => 'forward_url, internal_page, http_status'
+    ],
+    'interface' => [
         'showRecordFieldList' => '
             sys_language_uid,
             hidden,
@@ -48,9 +46,9 @@ return array(
             counter,
             last_hit
         '
-    ),
-    'types' => array(
-        '0' => array(
+    ],
+    'types' => [
+        '0' => [
             'showitem' => '
                 --palette--;;general,
                 forward_url,
@@ -68,8 +66,8 @@ return array(
                 counter,
                 last_hit
         '
-        ),
-        '1' => array(
+        ],
+        '1' => [
             'showitem' => '
                 type,
                 forward_url,
@@ -87,8 +85,8 @@ return array(
                 counter,
                 last_hit
         '
-        ),
-        '2' => array(
+        ],
+        '2' => [
             'showitem' => '
                 type,
                 forward_url,
@@ -106,140 +104,164 @@ return array(
                 counter,
                 last_hit
         '
-        ),
-    ),
-    'palettes' => array(
-        'general' => array(
+        ],
+    ],
+    'palettes' => [
+        'general' => [
             'showitem' => 'type, sys_language_uid',
             'canNotCollapse' => true
-        ),
-        'access' => array(
+        ],
+        'access' => [
             'showitem' => 'starttime, endtime',
             'canNotCollapse' => true
-        )
-    ),
-    'columns' => array(
-        'sys_language_uid' => array(
+        ]
+    ],
+    'columns' => [
+        'sys_language_uid' => [
             'exclude' => true,
             'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.language',
-            'config' => array(
+            'config' => [
                 'type' => 'select',
                 'foreign_table' => 'sys_language',
                 'foreign_table_where' => 'ORDER BY sys_language.title',
-                'items' => array(
-                    array('LLL:EXT:lang/locallang_general.xlf:LGL.default_value', 0)
-                )
-            )
-        ),
-        'l10n_parent' => array(
+                'items' => [
+                    ['LLL:EXT:lang/locallang_general.xlf:LGL.default_value', 0]
+                ]
+            ]
+        ],
+        'l10n_parent' => [
             'displayCond' => 'FIELD:sys_language_uid:>:0',
             'exclude' => true,
             'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.l18n_parent',
-            'config' => array(
+            'config' => [
                 'type' => 'select',
-                'items' => array(
-                    array('', 0)
-                ),
+                'items' => [
+                    ['', 0]
+                ],
                 'foreign_table' => 'tx_urlforwarding_domain_model_redirect',
                 'foreign_table_where' => 'AND tx_urlforwarding_domain_model_redirect.pid=###CURRENT_PID### AND tx_urlforwarding_domain_model_redirect.sys_language_uid IN (-1,0)'
-            )
-        ),
-        'l10n_diffsource' => array(
-            'config' => array(
+            ]
+        ],
+        'l10n_diffsource' => [
+            'config' => [
                 'type' => 'passthrough'
-            )
-        ),
-        't3ver_label' => array(
+            ]
+        ],
+        't3ver_label' => [
             'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.versionLabel',
-            'config' => array(
+            'config' => [
                 'type' => 'input',
                 'size' => 30,
                 'max' => 255
-            )
-        ),
-        'hidden' => array(
+            ]
+        ],
+        'hidden' => [
             'exclude' => true,
             'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.hidden',
-            'config' => array(
+            'config' => [
                 'type' => 'check'
-            )
-        ),
-        'starttime' => array(
+            ]
+        ],
+        'starttime' => [
             'exclude' => true,
             'l10n_mode' => 'mergeIfNotBlank',
             'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.starttime',
-            'config' => array(
+            'config' => [
                 'type' => 'input',
                 'size' => 13,
                 'max' => 20,
                 'eval' => 'datetime',
                 'checkbox' => 0,
                 'default' => 0,
-                'range' => array(
+                'range' => [
                     'lower' => mktime(0, 0, 0, date('m'), date('d'), date('Y'))
-                )
-            )
-        ),
-        'endtime' => array(
+                ]
+            ]
+        ],
+        'endtime' => [
             'exclude' => true,
             'l10n_mode' => 'mergeIfNotBlank',
             'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.endtime',
-            'config' => array(
+            'config' => [
                 'type' => 'input',
                 'size' => 13,
                 'max' => 20,
                 'eval' => 'datetime',
                 'checkbox' => 0,
                 'default' => 0,
-                'range' => array(
+                'range' => [
                     'lower' => mktime(0, 0, 0, date('m'), date('d'), date('Y'))
-                )
-            )
-        ),
-        'type' => array(
+                ]
+            ]
+        ],
+        'type' => [
             'exclude' => false,
             'l10n_mode' => 'mergeIfNotBlank',
             'label' => 'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:type',
-            'config' => array(
+            'config' => [
                 'type' => 'select',
-                'items' => array(
-                    array('LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:type.0', 0),
-                    array('LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:type.1', 1),
-                    array('LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:type.2', 2)
-                ),
+                'items' => [
+                    [
+                        'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:type.0',
+                        0,
+                        'mimetypes-x-urlforwarding-type-0'
+                    ],
+                    [
+                        'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:type.1',
+                        1,
+                        'mimetypes-x-urlforwarding-type-1'
+                    ],
+                    [
+                        'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:type.2',
+                        2,
+                        'mimetypes-x-urlforwarding-type-2'
+                    ]
+                ],
                 'size' => 1,
                 'maxitems' => 1
-            )
-        ),
-        'http_status' => array(
+            ]
+        ],
+        'http_status' => [
             'exclude' => false,
             'label' => 'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:http_status',
-            'config' => array(
+            'config' => [
                 'type' => 'select',
-                'items' => array(
-                    array('LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:http_status.301', 301),
-                    array('LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:http_status.302', 302),
-                    array('LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:http_status.303', 303),
-                    array('LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:http_status.307', 307)
-                ),
+                'items' => [
+                    [
+                        'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:http_status.301',
+                        301
+                    ],
+                    [
+                        'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:http_status.302',
+                        302
+                    ],
+                    [
+                        'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:http_status.303',
+                        303
+                    ],
+                    [
+                        'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:http_status.307',
+                        307
+                    ]
+                ],
                 'size' => 1,
                 'maxitems' => 1,
                 'default' => 302
-            )
-        ),
-        'forward_url' => array(
+            ]
+        ],
+        'forward_url' => [
             'exclude' => false,
             'label' => 'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:forward_url',
-            'config' => array(
+            'config' => [
                 'type' => 'input',
                 'size' => 30,
                 'eval' => 'trim, required, nospace'
-            )
-        ),
-        'internal_page' => array(
+            ]
+        ],
+        'internal_page' => [
             'exclude' => false,
             'label' => 'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:internal_page',
-            'config' => array(
+            'config' => [
                 'type' => 'group',
                 'internal_type' => 'db',
                 'allowed' => 'pages',
@@ -248,35 +270,35 @@ return array(
                 'maxitems' => 1,
                 'eval' => '',
                 'show_thumbs' => '1',
-                'wizards' => array(
-                    'suggest' => array(
+                'wizards' => [
+                    'suggest' => [
                         'type' => 'suggest',
-                        'default' => array(
+                        'default' => [
                             'searchWholePhrase' => 1,
                             'maxPathTitleLength' => 40,
                             'maxItemsInResultList' => 5
-                        ),
-                        'pages' => array(
+                        ],
+                        'pages' => [
                             'searchCondition' => 'doktype NOT IN (3,4,6,7,199,254,255)'
-                        )
-                    )
-                )
-            )
-        ),
-        'external_url' => array(
+                        ]
+                    ]
+                ]
+            ]
+        ],
+        'external_url' => [
             'exclude' => false,
             'label' => 'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:external_url',
-            'config' => array(
+            'config' => [
                 'type' => 'input',
                 'size' => 30,
                 'eval' => 'trim, required',
                 'softref' => 'substitute'
-            )
-        ),
-        'internal_file' => array(
+            ]
+        ],
+        'internal_file' => [
             'exclude' => false,
             'label' => 'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:internal_file',
-            'config' => array(
+            'config' => [
                 'type' => 'group',
                 'internal_type' => 'file_reference',
                 'allowed' => 'jpg, jpeg, gif, png, pdf, doc, docx, xls, xlsx, ppt, pptx',
@@ -284,63 +306,63 @@ return array(
                 'size' => 1,
                 'minitems' => 1,
                 'maxitems' => 1
-            )
-        ),
-        'domain' => array(
+            ]
+        ],
+        'domain' => [
             'exclude' => false,
             'label' => 'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:domain',
-            'config' => array(
+            'config' => [
                 'type' => 'select',
                 'foreign_table' => 'sys_domain',
                 'MM' => 'tx_urlforwarding_domain_mm',
                 'size' => 5,
                 'autoSizeMax' => 10,
                 'maxitems' => 10
-            )
-        ),
-        'requested_by' => array(
+            ]
+        ],
+        'requested_by' => [
             'exclude' => true,
             'label' => 'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:requested_by',
-            'config' => array(
+            'config' => [
                 'type' => 'input',
                 'size' => 30,
                 'eval' => 'trim'
-            )
-        ),
-        'request_date' => array(
+            ]
+        ],
+        'request_date' => [
             'exclude' => true,
             'label' => 'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:request_date',
-            'config' => array(
+            'config' => [
                 'size' => '10',
                 'max' => '20',
                 'type' => 'input',
                 'eval' => 'date'
-            )
-        ),
-        'request_note' => array(
+            ]
+        ],
+        'request_note' => [
             'exclude' => true,
             'label' => 'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:request_note',
-            'config' => array(
+            'config' => [
                 'type' => 'text'
-            )
-        ),
-        'counter' => array(
+            ]
+        ],
+        'counter' => [
             'exclude' => false,
             'label' => 'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:counter',
-            'config' => array(
+            'config' => [
                 'type' => 'none',
                 'size' => 5
-            )
-        ),
-        'last_hit' => array(
+            ]
+        ],
+        'last_hit' => [
             'exclude' => false,
             'label' => 'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:last_hit',
-            'config' => array(
+            'config' => [
                 'type' => 'input',
                 'size' => 16,
                 'readOnly' => true,
                 'eval' => 'date'
-            )
-        )
-    )
-);
+            ]
+        ]
+    ]
+];
