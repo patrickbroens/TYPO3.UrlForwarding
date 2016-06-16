@@ -19,7 +19,7 @@
 		"typo3/cms-core": "*"
 	},
 	"replace": {
-		"url-forwarding": "self.version",
+		"url_forwarding": "self.version",
 		"typo3-ter/url-forwarding": "self.version"
 	},
 	"autoload": {
