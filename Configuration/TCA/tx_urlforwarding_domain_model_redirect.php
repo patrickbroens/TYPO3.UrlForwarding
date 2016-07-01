@@ -3,7 +3,7 @@ defined('TYPO3_MODE') or die();
 
 return [
     'ctrl' => [
-        'title'	=> 'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:table',
+        'title' => 'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:table',
         'label' => 'forward_url',
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
@@ -12,7 +12,9 @@ return [
         'typeicon_column' => 'type',
         'typeicon_classes' => [
             'default' => 'mimetypes-x-urlforwarding-redirect',
-            'mask' => 'mimetypes-x-urlforwarding-type-###TYPE###'
+            '0' => 'mimetypes-x-urlforwarding-internal',
+            '1' => 'mimetypes-x-urlforwarding-external',
+            '2' => 'mimetypes-x-urlforwarding-file'
         ],
         'useColumnsForDefaultValues' => 'type',
         'dividers2tabs' => true,
@@ -201,21 +203,9 @@ return [
             'config' => [
                 'type' => 'select',
                 'items' => [
-                    [
-                        'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:type.0',
-                        0,
-                        'mimetypes-x-urlforwarding-type-0'
-                    ],
-                    [
-                        'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:type.1',
-                        1,
-                        'mimetypes-x-urlforwarding-type-1'
-                    ],
-                    [
-                        'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:type.2',
-                        2,
-                        'mimetypes-x-urlforwarding-type-2'
-                    ]
+                    ['LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:type.0', 0],
+                    ['LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:type.1', 1],
+                    ['LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:type.2', 2]
                 ],
                 'size' => 1,
                 'maxitems' => 1
@@ -227,22 +217,10 @@ return [
             'config' => [
                 'type' => 'select',
                 'items' => [
-                    [
-                        'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:http_status.301',
-                        301
-                    ],
-                    [
-                        'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:http_status.302',
-                        302
-                    ],
-                    [
-                        'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:http_status.303',
-                        303
-                    ],
-                    [
-                        'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:http_status.307',
-                        307
-                    ]
+                    ['LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:http_status.301', 301],
+                    ['LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:http_status.302', 302],
+                    ['LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:http_status.303', 303],
+                    ['LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:http_status.307', 307]
                 ],
                 'size' => 1,
                 'maxitems' => 1,
