@@ -124,6 +124,7 @@ return [
             'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.language',
             'config' => [
                 'type' => 'select',
+                'renderType' => 'selectSingle',
                 'foreign_table' => 'sys_language',
                 'foreign_table_where' => 'ORDER BY sys_language.title',
                 'items' => [
@@ -137,6 +138,7 @@ return [
             'label' => 'LLL:EXT:lang/locallang_general.xlf:LGL.l18n_parent',
             'config' => [
                 'type' => 'select',
+                'renderType' => 'selectSingle',
                 'items' => [
                     ['', 0]
                 ],
@@ -202,6 +204,7 @@ return [
             'label' => 'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:type',
             'config' => [
                 'type' => 'select',
+                'renderType' => 'selectSingle',
                 'items' => [
                     ['LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:type.0', 0],
                     ['LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:type.1', 1],
@@ -216,6 +219,7 @@ return [
             'label' => 'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:http_status',
             'config' => [
                 'type' => 'select',
+                'renderType' => 'selectSingle',
                 'items' => [
                     ['LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:http_status.301', 301],
                     ['LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:http_status.302', 302],
@@ -291,6 +295,7 @@ return [
             'label' => 'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:domain',
             'config' => [
                 'type' => 'select',
+                'renderType' => 'selectSingle',
                 'foreign_table' => 'sys_domain',
                 'MM' => 'tx_urlforwarding_domain_mm',
                 'size' => 5,
