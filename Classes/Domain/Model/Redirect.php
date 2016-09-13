@@ -165,7 +165,7 @@ class Redirect
     {
         \TYPO3\CMS\Frontend\Utility\EidUtility::initTCA();
 
-        $this->setTypoScriptFrontendController();
+        $this->initializeTypoScriptFrontendController();
 
         return $this->getTypoScriptFrontendController()->cObj->typoLink_URL(
             [
@@ -197,34 +197,39 @@ class Redirect
 
 
     /**
-     * Set the TypoScript frontend controller
+     * Initialize the TypoScript frontend controller
      *
      * @return void
      */
+    protected function initializeTypoScriptFrontendController()
+    {
+        $this->setTypoScriptFrontendController();
+
+        $this->getTypoScriptFrontendController()->connectToDB();
+        $this->getTypoScriptFrontendController()->initFEuser();
+        $this->getTypoScriptFrontendController()->fetch_the_id();
+        $this->getTypoScriptFrontendController()->getPageAndRootline();
+        $this->getTypoScriptFrontendController()->initTemplate();
+        $this->getTypoScriptFrontendController()->tmpl->getFileName_backPath = PATH_site;
+        $this->getTypoScriptFrontendController()->forceTemplateParsing = 1;
+        $this->getTypoScriptFrontendController()->getConfigArray();
+        $this->getTypoScriptFrontendController()->cObj = GeneralUtility::makeInstance(
+            \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::class
+        );
+    }
+
+    /**
+     * Set the TypoScript frontend controller
+     */
     protected function setTypoScriptFrontendController()
     {
-        /** @var \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController $typoScriptFrontendController */
-        $typoScriptFrontendController = GeneralUtility::makeInstance(
+        $GLOBALS['TSFE'] = GeneralUtility::makeInstance(
             \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController::class,
             $GLOBALS['TYPO3_CONF_VARS'],
             $this->internalPage,
             0,
             1
         );
-
-        $typoScriptFrontendController->connectToDB();
-        $typoScriptFrontendController->initFEuser();
-        $typoScriptFrontendController->fetch_the_id();
-        $typoScriptFrontendController->getPageAndRootline();
-        $typoScriptFrontendController->initTemplate();
-        $typoScriptFrontendController->tmpl->getFileName_backPath = PATH_site;
-        $typoScriptFrontendController->forceTemplateParsing = 1;
-        $typoScriptFrontendController->getConfigArray();
-        $typoScriptFrontendController->cObj = GeneralUtility::makeInstance(
-            \TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer::class
-        );
-
-        $GLOBALS['TSFE'] = $typoScriptFrontendController;
     }
 
     /**
