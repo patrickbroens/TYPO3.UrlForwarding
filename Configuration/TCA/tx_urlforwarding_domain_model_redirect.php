@@ -295,7 +295,7 @@ return [
             'label' => 'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:domain',
             'config' => [
                 'type' => 'select',
-                'renderType' => 'selectSingle',
+                'renderType' => 'selectMultipleSideBySide',
                 'foreign_table' => 'sys_domain',
                 'MM' => 'tx_urlforwarding_domain_mm',
                 'size' => 5,
