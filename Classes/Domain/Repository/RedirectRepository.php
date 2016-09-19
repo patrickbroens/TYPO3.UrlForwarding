@@ -155,6 +155,28 @@ class RedirectRepository
     }
 
     /**
+     * Find a redirect by the internal type which has a certain target page
+     *
+     * @param int $pageUid The target page to search for
+     * @return array|FALSE|NULL
+     */
+    public function findInternalRedirectByTargetPage($pageUid)
+    {
+        return $this->getDatabaseConnection()->exec_SELECTgetSingleRow(
+            '
+                uid,
+                forward_url
+            ',
+            'tx_urlforwarding_domain_model_redirect',
+            '
+                type=\'0\' 
+                AND internal_page=\'' . (int)$pageUid . '\'
+                AND deleted=0
+            '
+        );
+    }
+
+    /**
      * Gets database instance
      *
      * @return \TYPO3\CMS\Core\Database\DatabaseConnection

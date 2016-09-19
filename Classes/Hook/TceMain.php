@@ -102,8 +102,7 @@ class TceMain
     {
         /** @var FlashMessageService $service */
         $service = GeneralUtility::makeInstance(FlashMessageService::class);
-        $flashMessageQueue = $service->getMessageQueueByIdentifier();
 
-        return $flashMessageQueue;
+        return $service->getMessageQueueByIdentifier();
     }
 }
