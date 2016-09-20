@@ -11,7 +11,8 @@ $recordTypes = [
     'redirect',
     'external',
     'file',
-    'internal'
+    'internal',
+    'path'
 ];
 
 foreach ($recordTypes as $recordType) {

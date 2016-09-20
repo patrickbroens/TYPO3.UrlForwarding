@@ -14,13 +14,16 @@ namespace PatrickBroens\UrlForwarding\Controller;
  * The TYPO3 project - inspiring people to share!
  */
 
+use PatrickBroens\UrlForwarding\Domain\Model\Redirect;
 use PatrickBroens\UrlForwarding\Domain\Repository\RedirectRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Utility\HttpUtility;
 
-
+/**
+ * Controller to handle the redirects
+ */
 class ForwardController
 {
-
     /**
      * Redirect repository
      *
@@ -29,7 +32,7 @@ class ForwardController
     protected $redirectRepository;
 
     /**
-     * inject redirect repository
+     * Inject redirect repository
      */
     public function __construct()
     {
@@ -38,27 +41,36 @@ class ForwardController
 
     /**
      * Check if a redirect exists and forward according to the redirects url and status
-     *
-     * @return void
      */
     public function forwardIfExists()
     {
-        /** @var \PatrickBroens\UrlForwarding\Domain\Model\Redirect $redirect */
-        $redirect = false;
+        $url = GeneralUtility::getIndpEnv('TYPO3_REQUEST_URL');
 
-        $request = parse_url(GeneralUtility::getIndpEnv('TYPO3_REQUEST_URL'));
+        $request = parse_url($url);
 
         $path = trim($request['path'], '/');
         $host = $request['host'];
+        $scheme = $request['scheme'];
 
-        if ($path != '') {
+        if ($path !== '') {
             $redirect = $this->redirectRepository->findByPathAndDomain($host, $path);
-        }
 
-        if ($redirect) {
-            header($redirect->getHttpStatus());
-            header('Location: ' . $redirect->getUrl());
-            exit();
+            if ($redirect) {
+                $this->redirect($redirect, $scheme, $host, $path);
+            }
         }
+    }
+
+    /**
+     * Redirect to the new URI
+     *
+     * @param Redirect $redirect The redirect record
+     * @param string $scheme The scheme from the request
+     * @param string $host The host from the request
+     * @param string $path The path from the request
+     */
+    protected function redirect(Redirect $redirect, $scheme, $host, $path)
+    {
+        HttpUtility::redirect($redirect->getUrl($scheme, $host, $path), $redirect->getHttpStatus());
     }
 }

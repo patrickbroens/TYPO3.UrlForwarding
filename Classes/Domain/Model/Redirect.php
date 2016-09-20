@@ -49,6 +49,13 @@ class Redirect
     protected $type;
 
     /**
+     * The URL to be forwarded
+     *
+     * @var string
+     */
+    protected $forwardUrl;
+
+    /**
      * The scheme
      *
      * @var string
@@ -84,6 +91,13 @@ class Redirect
     protected $internalFile;
 
     /**
+     * The path to replace
+     *
+     * @var string
+     */
+    protected $path;
+
+    /**
      * The http status
      *
      * @var int
@@ -95,33 +109,42 @@ class Redirect
      *
      * @param int $languageUid The language uid
      * @param int $type The type of redirect
+     * @param string $forwardUrl The URL to be forwarded
      * @param int $internalPage Uid of the internal page
      * @param string $externalUrl External URL
      * @param string $internalFile Path to the internal file
+     * @param string $path The path to replace
      * @param int $httpStatus The HTTP status
      */
     public function __construct(
         $languageUid,
         $type,
+        $forwardUrl,
         $internalPage,
         $externalUrl,
         $internalFile,
+        $path,
         $httpStatus
     ) {
         $this->languageUid = (int) $languageUid;
         $this->type = (int) $type;
+        $this->forwardUrl = (string) $forwardUrl;
         $this->internalPage = (int) $internalPage;
         $this->externalUrl = (string) $externalUrl;
         $this->internalFile = (string) $internalFile;
+        $this->path = (string) $path;
         $this->httpStatus = (int) $httpStatus;
     }
 
     /**
      * Returns the URL, depending on the type of redirect
      *
+     * @param string $scheme The scheme
+     * @param string $host The host
+     * @param string $oldPath The old path
      * @return null|string
      */
-    public function getUrl()
+    public function getUrl($scheme = 'http', $host = '', $oldPath = '')
     {
         $url = null;
 
@@ -137,6 +160,10 @@ class Redirect
             // Internal file
             case 2:
                 $url = GeneralUtility::locationHeaderUrl($this->internalFile);
+                break;
+            // Path
+            case 3:
+                $url = $this->constructUrlForPath($scheme, $host, $oldPath);
                 break;
         }
 
@@ -195,11 +222,26 @@ class Redirect
         return $url;
     }
 
+    /**
+     * Constructs a new path by replacing the old path with the new one
+     *
+     * @param string $scheme The scheme
+     * @param string $host The host
+     * @param string $oldPath The old complete path
+     * @return string The url with the replaced part of the path
+     */
+    protected function constructUrlForPath($scheme, $host, $oldPath)
+    {
+        $needle = '/'.preg_quote($this->path, '/').'/';
+
+        $newPath = preg_replace($needle, trim($this->forwardUrl, '/'), $oldPath, 1);
+
+        return $scheme . '://' . $host . '/' . $newPath;
+    }
+
 
     /**
      * Initialize the TypoScript frontend controller
-     *
-     * @return void
      */
     protected function initializeTypoScriptFrontendController()
     {

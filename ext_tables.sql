@@ -8,6 +8,7 @@ CREATE TABLE tx_urlforwarding_domain_model_redirect (
 	type varchar(100) NOT NULL DEFAULT '0',
 
 	forward_url text NOT NULL,
+	path text NOT NULL,
 	internal_page varchar(255) DEFAULT '' NOT NULL,
 	external_url text NOT NULL,
 	internal_file text NOT NULL,

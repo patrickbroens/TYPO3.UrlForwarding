@@ -24,6 +24,9 @@
 			<trans-unit id="type.2">
 				<source>Internal file</source>
 			</trans-unit>
+			<trans-unit id="type.3">
+				<source>Path</source>
+			</trans-unit>
 			<trans-unit id="http_status">
 				<source>HTTP status</source>
 			</trans-unit>
@@ -42,6 +45,9 @@
 			<trans-unit id="forward_url">
 				<source>Source</source>
 			</trans-unit>
+			<trans-unit id="forward_url.3">
+				<source>New path</source>
+			</trans-unit>
 			<trans-unit id="internal_page">
 				<source>Internal page</source>
 			</trans-unit>
@@ -50,6 +56,9 @@
 			</trans-unit>
 			<trans-unit id="internal_file">
 				<source>Internal file</source>
+			</trans-unit>
+			<trans-unit id="path">
+				<source>Old path</source>
 			</trans-unit>
 			<trans-unit id="domain">
 				<source>Limit to domain(s)</source>

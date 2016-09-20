@@ -14,7 +14,8 @@ return [
             'default' => 'mimetypes-x-urlforwarding-redirect',
             '0' => 'mimetypes-x-urlforwarding-internal',
             '1' => 'mimetypes-x-urlforwarding-external',
-            '2' => 'mimetypes-x-urlforwarding-file'
+            '2' => 'mimetypes-x-urlforwarding-file',
+            '3' => 'mimetypes-x-urlforwarding-path'
         ],
         'useColumnsForDefaultValues' => 'type',
         'dividers2tabs' => true,
@@ -29,7 +30,7 @@ return [
             'starttime' => 'starttime',
             'endtime' => 'endtime'
         ],
-        'searchFields' => 'forward_url, internal_page, http_status'
+        'searchFields' => 'forward_url, internal_page, path, http_status'
     ],
     'interface' => [
         'showRecordFieldList' => '
@@ -40,6 +41,7 @@ return [
             internal_page,
             external_url,
             internal_file,
+            path,
             http_status,
             domain,
             requested_by,
@@ -107,6 +109,25 @@ return [
                 last_hit
         '
         ],
+        '3' => [
+            'showitem' => '
+                type,
+                path,
+                forward_url;LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:forward_url.3,
+                http_status,
+                domain,
+            --div--;LLL:EXT:cms/locallang_ttc.xlf:tabs.access,
+                hidden,
+                --palette--;;access,
+            --div--;LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:tab.request,
+                requested_by,
+                request_date,
+                request_note,
+            --div--;LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:tab.statistics,
+                counter,
+                last_hit
+        '
+        ]
     ],
     'palettes' => [
         'general' => [
@@ -206,9 +227,26 @@ return [
                 'type' => 'select',
                 'renderType' => 'selectSingle',
                 'items' => [
-                    ['LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:type.0', 0],
-                    ['LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:type.1', 1],
-                    ['LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:type.2', 2]
+                    [
+                        'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:type.0',
+                        0,
+                        'mimetypes-x-urlforwarding-internal'
+                    ],
+                    [
+                        'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:type.1',
+                        1,
+                        'mimetypes-x-urlforwarding-external'
+                    ],
+                    [
+                        'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:type.2',
+                        2,
+                        'mimetypes-x-urlforwarding-file'
+                    ],
+                    [
+                        'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:type.3',
+                        3,
+                        'mimetypes-x-urlforwarding-path'
+                    ]
                 ],
                 'size' => 1,
                 'maxitems' => 1
@@ -288,6 +326,15 @@ return [
                 'size' => 1,
                 'minitems' => 1,
                 'maxitems' => 1
+            ]
+        ],
+        'path' => [
+            'exclude' => false,
+            'label' => 'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:path',
+            'config' => [
+                'type' => 'input',
+                'size' => 30,
+                'eval' => 'trim, required, nospace'
             ]
         ],
         'domain' => [

@@ -41,7 +41,7 @@ class RedirectRepository
      *
      * @param string $host The host, in case of limiting
      * @param string $path The path to search for
-     * @return array
+     * @return array|null
      */
     public function findByPathAndDomain($host, $path)
     {
@@ -55,34 +55,51 @@ class RedirectRepository
                 tx_urlforwarding_domain_model_redirect.uid,
                 tx_urlforwarding_domain_model_redirect.sys_language_uid,
                 tx_urlforwarding_domain_model_redirect.type,
+                tx_urlforwarding_domain_model_redirect.forward_url,
                 tx_urlforwarding_domain_model_redirect.internal_page,
                 tx_urlforwarding_domain_model_redirect.external_url,
                 tx_urlforwarding_domain_model_redirect.internal_file,
-                tx_urlforwarding_domain_model_redirect.http_status
+                tx_urlforwarding_domain_model_redirect.path,
+                tx_urlforwarding_domain_model_redirect.http_status                
             ',
-            'tx_urlforwarding_domain_model_redirect
+            '
+                tx_urlforwarding_domain_model_redirect
                 LEFT JOIN tx_urlforwarding_domain_mm
                 ON tx_urlforwarding_domain_mm.uid_local=tx_urlforwarding_domain_model_redirect.uid
                 LEFT JOIN sys_domain
                 ON sys_domain.uid=tx_urlforwarding_domain_mm.uid_foreign
             ',
-            'TRIM(BOTH \'/\' FROM tx_urlforwarding_domain_model_redirect.forward_url)=' . $pathQuoted . '
-            AND (
-                sys_domain.domainName IS null
-                OR (
-                    sys_domain.domainName=' . $hostQuoted . '
-                    AND sys_domain.hidden=0
+            '
+                (
+                    (
+                        TRIM(BOTH \'/\' FROM tx_urlforwarding_domain_model_redirect.forward_url)=' . $pathQuoted . '
+                        AND tx_urlforwarding_domain_model_redirect.type IN (0,1,2)
+                    )
+                    OR (
+                        LOCATE(
+                            TRIM(BOTH \'/\' FROM tx_urlforwarding_domain_model_redirect.path), 
+                            ' . $pathQuoted . '
+                        ) = 1
+                        AND tx_urlforwarding_domain_model_redirect.type=3
+                    )
                 )
-            )
-            AND (
-                tx_urlforwarding_domain_model_redirect.starttime<=' . (int)$GLOBALS['SIM_ACCESS_TIME'] . '
-            )
-            AND (
-                tx_urlforwarding_domain_model_redirect.endtime=0
-                OR tx_urlforwarding_domain_model_redirect.endtime>' . (int)$GLOBALS['SIM_ACCESS_TIME'] . '
-            )
-            AND tx_urlforwarding_domain_model_redirect.hidden=0
-            AND tx_urlforwarding_domain_model_redirect.deleted=0'
+                AND (
+                    sys_domain.domainName IS null
+                    OR (
+                        sys_domain.domainName=' . $hostQuoted . '
+                        AND sys_domain.hidden=0
+                    )
+                )
+                AND (
+                    tx_urlforwarding_domain_model_redirect.starttime<=' . (int)$GLOBALS['SIM_ACCESS_TIME'] . '
+                )
+                AND (
+                    tx_urlforwarding_domain_model_redirect.endtime=0
+                    OR tx_urlforwarding_domain_model_redirect.endtime>' . (int)$GLOBALS['SIM_ACCESS_TIME'] . '
+                )
+                AND tx_urlforwarding_domain_model_redirect.hidden=0
+                AND tx_urlforwarding_domain_model_redirect.deleted=0
+            '
         );
 
         if ($result) {
@@ -92,9 +109,11 @@ class RedirectRepository
                 Redirect::class,
                 $result['sys_language_uid'],
                 $result['type'],
+                $result['forward_url'],
                 $result['internal_page'],
                 $result['external_url'],
                 $result['internal_file'],
+                $result['path'],
                 $result['http_status']
             );
         }
@@ -105,7 +124,7 @@ class RedirectRepository
     /**
      * Increment the counter with 1 and update the last_hit field with the current timestamp
      *
-     * @param $uid
+     * @param $uid The uid of the redirect record
      */
     protected function updateCounterAndLastHit($uid)
     {
