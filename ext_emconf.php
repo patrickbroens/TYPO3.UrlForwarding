@@ -6,10 +6,9 @@ $EM_CONF['url_forwarding'] = [
     'state' => 'stable',
     'author' => 'Patrick Broens',
     'author_email' => 'patrick@patrickbroens.nl',
-    'version' => '1.2.0',
+    'version' => '1.3.0',
     'constraints' => [
         'depends' => [
-            'typo3' => '7.6.0-7.6.99'
             'typo3' => '8.7.0-8.7.99'
         ],
         'conflicts' => [],
