@@ -16,6 +16,7 @@ namespace PatrickBroens\UrlForwarding\Domain\Repository;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use PatrickBroens\UrlForwarding\Domain\Model\Redirect;
+use TYPO3\CMS\Core\Resource\File;
 
 /**
  * Redirect repository
@@ -194,6 +195,30 @@ class RedirectRepository
                 AND deleted=0
             '
         );
+    }
+
+    /**
+     * Get the internal file
+     *
+     * @param array $result The result
+     * @return null|File
+     */
+    protected function getInternalFile(array $result)
+    {
+        $file = null;
+
+        if ((int)$result['internal_file'] === 1) {
+            /** @var FileRepository $fileReferencesRepository */
+            $fileRepository = GeneralUtility::makeInstance(FileRepository::class);
+
+            $file = $fileRepository->findFileByRelation(
+                'tx_urlforwarding_domain_model_redirect',
+                'internal_file',
+                (int)$result['uid']
+            );
+        }
+
+        return $file;
     }
 
     /**

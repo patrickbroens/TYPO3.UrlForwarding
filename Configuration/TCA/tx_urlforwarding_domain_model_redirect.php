@@ -328,15 +328,53 @@ return [
         'internal_file' => [
             'exclude' => false,
             'label' => 'LLL:EXT:url_forwarding/Resources/Private/Language/TCA/Redirect.xlf:internal_file',
-            'config' => [
-                'type' => 'group',
-                'internal_type' => 'file_reference',
-                'allowed' => 'jpg, jpeg, gif, png, pdf, doc, docx, xls, xlsx, ppt, pptx',
-                'show_thumbs' => 1,
-                'size' => 1,
-                'minitems' => 1,
-                'maxitems' => 1
-            ]
+            'config' => \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::getFileFieldTCAConfig(
+                'internal_file',
+                [
+                    'overrideChildTca' => [
+                        'types' => [
+                            '0' => [
+                                'showitem' => '
+                                    --palette--;LLL:EXT:lang/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
+                                    --palette--;;filePalette'
+                            ],
+                            \TYPO3\CMS\Core\Resource\File::FILETYPE_TEXT => [
+                                'showitem' => '
+                                    --palette--;LLL:EXT:lang/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
+                                    --palette--;;filePalette'
+                            ],
+                            \TYPO3\CMS\Core\Resource\File::FILETYPE_IMAGE => [
+                                'showitem' => '
+                                    --palette--;LLL:EXT:lang/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
+                                    --palette--;;filePalette'
+                            ],
+                            \TYPO3\CMS\Core\Resource\File::FILETYPE_AUDIO => [
+                                'showitem' => '
+                                    --palette--;LLL:EXT:lang/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.audioOverlayPalette;audioOverlayPalette,
+                                    --palette--;;filePalette'
+                            ],
+                            \TYPO3\CMS\Core\Resource\File::FILETYPE_VIDEO => [
+                                'showitem' => '
+                                    --palette--;LLL:EXT:lang/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.videoOverlayPalette;videoOverlayPalette,
+                                    --palette--;;filePalette'
+                            ],
+                            \TYPO3\CMS\Core\Resource\File::FILETYPE_APPLICATION => [
+                                'showitem' => '
+                                    --palette--;LLL:EXT:lang/Resources/Private/Language/locallang_tca.xlf:sys_file_reference.imageoverlayPalette;imageoverlayPalette,
+                                    --palette--;;filePalette'
+                            ]
+                        ]
+                    ],
+                    'maxitems' => 1,
+                    'minitems' => 0,
+                    'appearance' => [
+                        'collapseAll' => 1,
+                        'expandSingle' => 1,
+                        'fileUploadAllowed' => 1
+                    ]
+                ],
+                'jpg, jpeg, gif, png, pdf, doc, docx, xls, xlsx, ppt, pptx'
+            )
         ],
         'path' => [
             'exclude' => false,
