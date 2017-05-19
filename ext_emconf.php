@@ -10,6 +10,7 @@ $EM_CONF['url_forwarding'] = [
     'constraints' => [
         'depends' => [
             'typo3' => '7.6.0-7.6.99'
+            'typo3' => '8.7.0-8.7.99'
         ],
         'conflicts' => [],
         'suggests' => []
