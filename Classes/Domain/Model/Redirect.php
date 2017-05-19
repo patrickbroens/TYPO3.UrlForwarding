@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace PatrickBroens\UrlForwarding\Domain\Model;
 
 /*
@@ -14,6 +15,7 @@ namespace PatrickBroens\UrlForwarding\Domain\Model;
  * The TYPO3 project - inspiring people to share!
  */
 
+use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController;
 
@@ -39,54 +41,61 @@ class Redirect
      *
      * @var int
      */
-    protected $languageUid;
+    protected $languageUid = 0;
 
     /**
      * The type
      *
      * @var int
      */
-    protected $type;
+    protected $type = 0;
 
     /**
      * The URL to be forwarded
      *
      * @var string
      */
-    protected $forwardUrl;
+    protected $forwardUrl = '';
 
     /**
      * The scheme
      *
      * @var string
      */
-    protected $scheme;
+    protected $scheme = '';
 
     /**
      * The host
      *
      * @var string
      */
-    protected $host;
+    protected $host = '';
 
     /**
      * The internal page
      *
      * @var int
      */
-    protected $internalPage;
+    protected $internalPage = 0;
+
+    /**
+     * The additional parameters
+     *
+     * @var string
+     */
+    protected $parameters = '';
 
     /**
      * The external url
      *
      * @var string
      */
-    protected $externalUrl;
+    protected $externalUrl = '';
 
     /**
      * The internal file
      *
-     * @var string
+     * @var File
      */
     protected $internalFile;
 
@@ -95,14 +104,14 @@ class Redirect
      *
      * @var string
      */
-    protected $path;
+    protected $path = '';
 
     /**
      * The http status
      *
      * @var int
      */
-    protected $httpStatus;
+    protected $httpStatus = 0;
 
     /**
      * Constructs the Redirect
@@ -111,29 +120,32 @@ class Redirect
      * @param int $type The type of redirect
      * @param string $forwardUrl The URL to be forwarded
      * @param int $internalPage Uid of the internal page
+     * @param string $parameters Additional parameters
      * @param string $externalUrl External URL
-     * @param string $internalFile Path to the internal file
+     * @param File|null $internalFile The internal file
      * @param string $path The path to replace
      * @param int $httpStatus The HTTP status
      */
     public function __construct(
-        $languageUid,
-        $type,
-        $forwardUrl,
-        $internalPage,
-        $externalUrl,
+        int $languageUid,
+        int $type,
+        string $forwardUrl,
+        int $internalPage,
+        string $parameters,
+        string $externalUrl,
         $internalFile,
-        $path,
-        $httpStatus
+        string $path,
+        int $httpStatus
     ) {
-        $this->languageUid = (int) $languageUid;
-        $this->type = (int) $type;
-        $this->forwardUrl = (string) $forwardUrl;
-        $this->internalPage = (int) $internalPage;
-        $this->externalUrl = (string) $externalUrl;
-        $this->internalFile = (string) $internalFile;
-        $this->path = (string) $path;
-        $this->httpStatus = (int) $httpStatus;
+        $this->languageUid = $languageUid;
+        $this->type = $type;
+        $this->forwardUrl = $forwardUrl;
+        $this->internalPage = $internalPage;
+        $this->parameters = $parameters;
+        $this->externalUrl = $externalUrl;
+        $this->internalFile = $internalFile;
+        $this->path = $path;
+        $this->httpStatus = $httpStatus;
     }
 
     /**
@@ -144,7 +156,7 @@ class Redirect
      * @param string $oldPath The old path
      * @return null|string
      */
-    public function getUrl($scheme = 'http', $host = '', $oldPath = '')
+    public function getUrl(string $scheme = 'http', string $host = '', string $oldPath = '')
     {
         $url = null;
 
@@ -159,7 +171,7 @@ class Redirect
                 break;
             // Internal file
             case 2:
-                $url = GeneralUtility::locationHeaderUrl($this->internalFile);
+                $url = $this->constructUrlForInternalFile();
                 break;
             // Path
             case 3:
@@ -181,6 +193,16 @@ class Redirect
     }
 
     /**
+     * Returns true if the redirect has parameters
+     *
+     * @return bool
+     */
+    public function hasParameters()
+    {
+        return !empty($this->parameters);
+    }
+
+    /**
      * Construct the URL for an internal page
      *
      * We need TSFE for that, but this is not available at this point
@@ -194,11 +216,15 @@ class Redirect
 
         $this->initializeTypoScriptFrontendController();
 
+        parse_str($this->parameters, $parameters);
+
+        $parameters['L'] = $this->languageUid;
+
         return $this->getTypoScriptFrontendController()->cObj->typoLink_URL(
             [
                 'parameter' => $this->internalPage,
                 'forceAbsoluteUrl' => true,
-                'additionalParams' => '&L=' . $this->languageUid
+                'additionalParams' => '&' . http_build_query($parameters)
             ]
         );
     }
@@ -223,6 +249,22 @@ class Redirect
     }
 
     /**
+     * Constructs the path to the internal file
+     *
+     * @return string
+     */
+    protected function constructUrlForInternalFile()
+    {
+        $url = '';
+
+        if ($this->internalFile instanceof File) {
+            $url = GeneralUtility::locationHeaderUrl($this->internalFile->getPublicUrl());
+        }
+
+        return $url;
+    }
+
+    /**
      * Constructs a new path by replacing the old path with the new one
      *
      * @param string $scheme The scheme
@@ -230,7 +272,7 @@ class Redirect
      * @param string $oldPath The old complete path
      * @return string The url with the replaced part of the path
      */
-    protected function constructUrlForPath($scheme, $host, $oldPath)
+    protected function constructUrlForPath(string $scheme, string $host, string $oldPath)
     {
         $needle = '/'.preg_quote($this->path, '/').'/';
 
@@ -266,7 +308,7 @@ class Redirect
     protected function setTypoScriptFrontendController()
     {
         $GLOBALS['TSFE'] = GeneralUtility::makeInstance(
-            \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController::class,
+            TypoScriptFrontendController::class,
             $GLOBALS['TYPO3_CONF_VARS'],
             $this->internalPage,
             0,
@@ -277,7 +319,7 @@ class Redirect
     /**
      * Get the TypoScript frontend controller
      *
-     * @return \TYPO3\CMS\Frontend\Controller\TypoScriptFrontendController
+     * @return TypoScriptFrontendController
      */
     protected function getTypoScriptFrontendController()
     {

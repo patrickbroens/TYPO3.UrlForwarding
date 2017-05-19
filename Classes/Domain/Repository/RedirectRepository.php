@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace PatrickBroens\UrlForwarding\Domain\Repository;
 
 /*
@@ -14,15 +15,23 @@ namespace PatrickBroens\UrlForwarding\Domain\Repository;
  * The TYPO3 project - inspiring people to share!
  */
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use PatrickBroens\UrlForwarding\Domain\Model\Redirect;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\QueryBuilder;
+use TYPO3\CMS\Dbal\Database\DatabaseConnection;
 use TYPO3\CMS\Core\Resource\File;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Redirect repository
  */
 class RedirectRepository
 {
+    /**
+     * The table name
+     */
+    const TABLE_NAME = 'tx_urlforwarding_domain_model_redirect';
+
     /**
      * Constructor
      *
@@ -42,13 +51,13 @@ class RedirectRepository
      *
      * @param string $host The host, in case of limiting
      * @param string $path The path to search for
-     * @return array|null
+     * @return Redirect|null
      */
-    public function findByPathAndDomain($host, $path)
+    public function findByPathAndDomain(string $host, string $path)
     {
         $redirect = null;
 
-        $pathQuoted = $this->getDatabaseConnection()->fullQuoteStr((string)$path, 'tx_urlforwarding_domain_model_redirect');
+        $pathQuoted = $this->getDatabaseConnection()->fullQuoteStr($path, 'tx_urlforwarding_domain_model_redirect');
         $hostQuoted = $this->getDatabaseConnection()->fullQuoteStr($host, 'sys_domain');
 
         $result = $this->getDatabaseConnection()->exec_SELECTgetSingleRow(
@@ -101,22 +110,25 @@ class RedirectRepository
                 )
                 AND tx_urlforwarding_domain_model_redirect.hidden=0
                 AND tx_urlforwarding_domain_model_redirect.deleted=0
+                AND tx_urlforwarding_domain_model_redirect.forward_url!=\'\'
             '
         );
 
         if ($result) {
-            $this->updateCounterAndLastHit($result['uid']);
+            $this->updateCounterAndLastHit((int)$result['uid']);
 
+            /** @var Redirect $redirect */
             $redirect = GeneralUtility::makeInstance(
                 Redirect::class,
-                $result['sys_language_uid'],
-                $result['type'],
-                $result['forward_url'],
-                $result['internal_page'],
-                $result['external_url'],
-                $result['internal_file'],
-                $result['path'],
-                $result['http_status']
+                (int)$result['sys_language_uid'],
+                (int)$result['type'],
+                (string)$result['forward_url'],
+                (int)$result['internal_page'],
+                (string)$result['parameters'],
+                (string)$result['external_url'],
+                $this->getInternalFile($result),
+                (string)$result['path'],
+                (int)$result['http_status']
             );
         }
 
@@ -124,27 +136,44 @@ class RedirectRepository
     }
 
     /**
+     * Insert a redirect
+     *
+     * Scope of this method is external use, like other extensions
+     *
+     * @param array $insertData
+     */
+    public function insert(array $insertData)
+    {
+        $queryBuilder = static::getQueryBuilderForTable(self::TABLE_NAME);
+
+        $queryBuilder
+            ->insert(self::TABLE_NAME)
+            ->values($insertData)
+            ->execute();
+    }
+
+    /**
      * Increment the counter with 1 and update the last_hit field with the current timestamp
      *
-     * @param $uid The uid of the redirect record
+     * @param int $uid The uid of the redirect record
      */
-    protected function updateCounterAndLastHit($uid)
+    protected function updateCounterAndLastHit(int $uid)
     {
         $this->getDatabaseConnection()->sql_query('
             UPDATE tx_urlforwarding_domain_model_redirect
-            SET counter=counter + 1, last_hit=' . (integer)$GLOBALS['SIM_ACCESS_TIME'] . '
-            WHERE uid=' . (integer)$uid . '
+            SET counter=counter + 1, last_hit=' . (int)$GLOBALS['SIM_ACCESS_TIME'] . '
+            WHERE uid=' . $uid . '
         ');
     }
 
     /**
      * Get records with the same "forward_url"
      *
-     * @param int $uidEditedRecord The uid of the edited record
+     * @param string $uidEditedRecord The uid of the edited record. When new contains 'NEW'
      * @param array $editedRecord The fields of the edited record
      * @return mixed
      */
-    public function getEqualRecords($uidEditedRecord, $editedRecord)
+    public function getEqualRecords(string $uidEditedRecord, array $editedRecord)
     {
         $pathQuoted = $this->getDatabaseConnection()->fullQuoteStr((string)$editedRecord['forward_url'],
             'tx_urlforwarding_domain_model_redirect');
@@ -157,7 +186,9 @@ class RedirectRepository
         return $this->getDatabaseConnection()->exec_SELECTgetRows(
             '
                 tx_urlforwarding_domain_model_redirect.uid,
-                GROUP_CONCAT(tx_urlforwarding_domain_mm.uid_foreign SEPARATOR \',\') AS domainUids
+                tx_urlforwarding_domain_model_redirect.type,
+                GROUP_CONCAT(tx_urlforwarding_domain_mm.uid_foreign SEPARATOR \',\') AS domainUids,
+                tx_urlforwarding_domain_model_redirect.parameters
             ',
             '
                 tx_urlforwarding_domain_model_redirect
@@ -181,17 +212,18 @@ class RedirectRepository
      * @param int $pageUid The target page to search for
      * @return array|FALSE|NULL
      */
-    public function findInternalRedirectByTargetPage($pageUid)
+    public function findInternalRedirectByTargetPage(int $pageUid)
     {
         return $this->getDatabaseConnection()->exec_SELECTgetSingleRow(
             '
                 uid,
-                forward_url
+                forward_url,
+                parameters
             ',
             'tx_urlforwarding_domain_model_redirect',
             '
                 type=\'0\' 
-                AND internal_page=\'' . (int)$pageUid . '\'
+                AND internal_page=\'' . $pageUid . '\'
                 AND deleted=0
             '
         );
@@ -224,10 +256,21 @@ class RedirectRepository
     /**
      * Gets database instance
      *
-     * @return \TYPO3\CMS\Core\Database\DatabaseConnection
+     * @return DatabaseConnection
      */
     protected function getDatabaseConnection()
     {
         return $GLOBALS['TYPO3_DB'];
+    }
+
+    /**
+     * Get the query builder for a table
+     *
+     * @param string $table
+     * @return QueryBuilder
+     */
+    protected static function getQueryBuilderForTable($table)
+    {
+        return GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable($table);
     }
 }

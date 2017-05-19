@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace PatrickBroens\UrlForwarding\Hook;
 
 /*
@@ -16,6 +17,7 @@ namespace PatrickBroens\UrlForwarding\Hook;
 
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use PatrickBroens\UrlForwarding\Domain\Repository\RedirectRepository;
+use TYPO3\CMS\Lang\LanguageService;
 
 /**
  * Hook for cms layout
@@ -29,7 +31,7 @@ class CmsLayout
      * @param object|null $referringObject The referring object (mostly not passed)
      * @return string The addition for the page title
      */
-    public function addRedirectToPageTitle(array $parameters, $referringObject)
+    public function addRedirectToPageTitle(array $parameters, $referringObject): string
     {
         $redirectWarning = '';
 
@@ -40,7 +42,10 @@ class CmsLayout
 
         $internalRedirect = $this->getRedirectRepository()->findInternalRedirectByTargetPage((int)$parameters[1]);
 
-        if ($internalRedirect) {
+        if (
+            $internalRedirect
+            && empty($internalRedirect['parameters'])
+        ) {
             $redirectText = $this->getLanguageService()->sL(
                 'LLL:EXT:url_forwarding/Resources/Private/Language/Backend.xlf:internal_redirect'
             );
@@ -68,7 +73,7 @@ class CmsLayout
     /**
      * Returns LanguageService
      *
-     * @return \TYPO3\CMS\Lang\LanguageService
+     * @return LanguageService
      */
     protected function getLanguageService()
     {

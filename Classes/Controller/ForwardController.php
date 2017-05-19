@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace PatrickBroens\UrlForwarding\Controller;
 
 /*
@@ -40,7 +41,7 @@ class ForwardController
     }
 
     /**
-     * Check if a redirect exists and forward according to the redirects url and status
+     * Check if a redirect exists and forward according to the redirect url and status
      */
     public function forwardIfExists()
     {
@@ -69,7 +70,7 @@ class ForwardController
      * @param string $host The host from the request
      * @param string $path The path from the request
      */
-    protected function redirect(Redirect $redirect, $scheme, $host, $path)
+    protected function redirect(Redirect $redirect, string $scheme, string $host, string $path)
     {
         HttpUtility::redirect($redirect->getUrl($scheme, $host, $path), $redirect->getHttpStatus());
     }

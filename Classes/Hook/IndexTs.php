@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace PatrickBroens\UrlForwarding\Hook;
 
 /*
@@ -24,8 +25,6 @@ class IndexTs
 {
     /**
      * Preprocess the current request
-     *
-     * @return void
      */
     public function preprocessRequest()
     {

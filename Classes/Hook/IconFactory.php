@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace PatrickBroens\UrlForwarding\Hook;
 
 /*
@@ -31,7 +32,7 @@ class IconFactory
      * @param string $iconName The name of the overlay icon
      * @return string The name of the overlay icon
      */
-    public function postOverlayPriorityLookup($table, $row, $status, &$iconName)
+    public function postOverlayPriorityLookup(string $table, array $row, array $status, string $iconName): string
     {
         // Early return when the table is not 'pages'
         if ($table !== 'pages') {
@@ -40,7 +41,11 @@ class IconFactory
 
         $internalRedirect = $this->getRedirectRepository()->findInternalRedirectByTargetPage((int)$row['uid']);
 
-        if ($internalRedirect && !$status['hidden']) {
+        if (
+            $internalRedirect
+            && !$status['hidden']
+            && empty($internalRedirect['parameters'])
+        ) {
             $iconName = 'extensions-url_forwarding-overlay-redirect';
         }
 

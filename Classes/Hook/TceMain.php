@@ -1,4 +1,5 @@
 <?php
+declare(strict_types = 1);
 namespace PatrickBroens\UrlForwarding\Hook;
 
 /*
@@ -14,10 +15,12 @@ namespace PatrickBroens\UrlForwarding\Hook;
  * The TYPO3 project - inspiring people to share!
  */
 
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Core\Messaging\FlashMessage;
-use TYPO3\CMS\Core\Messaging\FlashMessageService;
 use PatrickBroens\UrlForwarding\Domain\Repository\RedirectRepository;
+use TYPO3\CMS\Core\DataHandling\DataHandler;
+use TYPO3\CMS\Core\Messaging\FlashMessage;
+use TYPO3\CMS\Core\Messaging\FlashMessageQueue;
+use TYPO3\CMS\Core\Messaging\FlashMessageService;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * When adding a new element, check if the redirect is already there within a certain domain.
@@ -30,10 +33,10 @@ class TceMain
      *
      * $referringObject->datamap['tx_urlforwarding_domain_model_redirect'] contains the changes made to records
      *
-     * @param \TYPO3\CMS\Core\DataHandling\DataHandler $referringObject The object calling this hook
+     * @param DataHandler $referringObject The object calling this hook
      * @return void
      */
-    public function processDatamap_beforeStart(\TYPO3\CMS\Core\DataHandling\DataHandler $referringObject)
+    public function processDatamap_beforeStart(DataHandler $referringObject)
     {
         if (!isset($referringObject->datamap['tx_urlforwarding_domain_model_redirect'])) {
             return;
@@ -83,7 +86,9 @@ class TceMain
                 /** @var FlashMessage $flashMessage */
                 $flashMessage = GeneralUtility::makeInstance(
                     FlashMessage::class,
-                    'A redirect with the name "' . htmlspecialchars($editedRecord['forward_url']) . '" is already covering the same domain. This record has not been stored.',
+                    'A redirect with the name "'
+                        . htmlspecialchars($editedRecord['forward_url'])
+                        . '" is already covering the same domain. This record has not been stored.',
                     'An error occured',
                     FlashMessage::ERROR,
                     true
@@ -96,7 +101,7 @@ class TceMain
     /**
      * Get the Flash Message Queue
      *
-     * @return \TYPO3\CMS\Core\Messaging\FlashMessageQueue
+     * @return FlashMessageQueue
      */
     protected function getFlashMessageQueue()
     {
