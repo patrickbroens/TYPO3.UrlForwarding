@@ -50,7 +50,7 @@ class TceMain
 
             $editedRecord['domain'] = trim($editedRecord['domain'], ',');
 
-            $equalRecords = $redirectRepository->getEqualRecords($uidEditedRecord, $editedRecord);
+            $equalRecords = $redirectRepository->getEqualRecords((string)$uidEditedRecord, $editedRecord);
 
             // Does the url exist in another record
             if (!empty($equalRecords)) {
