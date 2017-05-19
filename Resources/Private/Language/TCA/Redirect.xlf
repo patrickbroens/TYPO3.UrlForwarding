@@ -51,6 +51,9 @@
 			<trans-unit id="internal_page">
 				<source>Internal page</source>
 			</trans-unit>
+			<trans-unit id="parameters">
+				<source>Additional parameters</source>
+			</trans-unit>
 			<trans-unit id="external_url">
 				<source>External URL</source>
 			</trans-unit>

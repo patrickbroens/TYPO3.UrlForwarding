@@ -57,6 +57,7 @@ class RedirectRepository
                 tx_urlforwarding_domain_model_redirect.type,
                 tx_urlforwarding_domain_model_redirect.forward_url,
                 tx_urlforwarding_domain_model_redirect.internal_page,
+                tx_urlforwarding_domain_model_redirect.parameters,
                 tx_urlforwarding_domain_model_redirect.external_url,
                 tx_urlforwarding_domain_model_redirect.internal_file,
                 tx_urlforwarding_domain_model_redirect.path,

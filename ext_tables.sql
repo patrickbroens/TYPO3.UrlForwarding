@@ -10,6 +10,7 @@ CREATE TABLE tx_urlforwarding_domain_model_redirect (
 	forward_url text NOT NULL,
 	path text NOT NULL,
 	internal_page varchar(255) DEFAULT '' NOT NULL,
+	parameters varchar(255) DEFAULT '' NOT NULL,
 	external_url text NOT NULL,
 	internal_file text NOT NULL,
 	http_status int(11) DEFAULT '0' NOT NULL,
