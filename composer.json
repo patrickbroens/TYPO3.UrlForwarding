@@ -27,7 +27,7 @@
 		}
 	},
 	"homepage": "https://github.com/patrickbroens/TYPO3.UrlForwarding",
-	"license": "GPL-2.0+",
+	"license": "GPL-2.0-or-later",
 	"support": {
 		"issues": "https://github.com/patrickbroens/TYPO3.UrlForwarding/issues"
 	}
